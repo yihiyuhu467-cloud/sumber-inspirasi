@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial; display:flex; gap:20px; padding:20px;}
+.left{width:30%;}
+.right{width:65%;}
+.box{border:1px solid #ccc; padding:10px; margin-bottom:20px;}
+</style>
+</head>
+<body>
+
+<div class="left">
+  <div class="box">
+    <h3>Google Mini</h3>
+    <input id="g" placeholder="Cari di Google">
+    <button onclick="go()">Cari</button>
+  </div>
+
+  <div class="box">
+    <h3>AI Mini</h3>
+    <input id="ai" placeholder="Tanya AI">
+    <button onclick="ask()">Kirim</button>
+    <p id="aiout"></p>
+  </div>
+</div>
+
+<div class="right">
+  <div class="box">
+    <h3>YouTube Mini (Random Lagu)</h3>
+    <button onclick="rand()">Random</button><br><br>
+    <iframe id="yt" width="350" height="200" src="" allowfullscreen></iframe>
+  </div>
+
+  <div class="box">
+    <h3>YouTube Search Mini</h3>
+    <input id="ys" placeholder="Cari Lagu YouTube">
+    <button onclick="ytsearch()">Cari</button>
+    <div id="ytlist"></div>
+  </div>
+
+  <div class="box">
+    <h3>Instagram / TikTok</h3>
+    <p>Masukan embed code langsung:</p>
+    <textarea id="embed" rows="4" cols="50"></textarea><br>
+    <button onclick="showEmbed()">Tampilkan</button>
+    <div id="embedOut"></div>
+  </div>
+</div>
+
+<script>
+const vids=[
+"https://www.youtube.com/embed/dQw4w9WgXcQ",
+"https://www.youtube.com/embed/kXYiU_JCYtU",
+"https://www.youtube.com/embed/ktvTqknDobU",
+"https://www.youtube.com/embed/OPf0YbXqDm0"
+];
+
+function rand(){
+  document.getElementById("yt").src = vids[Math.floor(Math.random()*vids.length)];
+}
+
+function go(){
+  const q=document.getElementById("g").value;
+  window.open("https://www.google.com/search?q="+encodeURIComponent(q));
+}
+
+async function ask(){
+  const m=document.getElementById("ai").value;
+  const r=await fetch("/chat",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m})});
+  const j=await r.json();
+  document.getElementById("aiout").innerText=j.reply;
+}
+
+function showEmbed(){
+  document.getElementById("embedOut").innerHTML=document.getElementById("embed").value;
+}
+
+async function ytsearch(){
+  const q=document.getElementById("ys").value;
+  document.getElementById("ytlist").innerHTML="<i>Membuka pencarian…</i>";
+  window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(q));
+}
+</script>
+
+</body>
+</html>
